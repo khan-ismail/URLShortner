@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: ShortURLService
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/zerotoismail?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+app:
+  base_url: ${APPLICATION_BASE_URL}
+  short_url_length: ${SHORT_URL_LENGTH}
+  short_url_key_upper: ${SHORT_URL_UPPER_KEY}
+  short_url_key_lower: ${SHORT_URL_LOWER_KEY}
+  short_url_key_num: ${SHORT_URL_NUMBER_KEY}
+  short_url_key_sec: ${SHORT_URL_SPECIAL_KEY}
