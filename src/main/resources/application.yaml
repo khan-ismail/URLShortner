@@ -18,6 +18,16 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+  # Redis Configuration
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
+      connect-timeout: 3s
+      timeout: 3s
+
 app:
   base_url: ${APPLICATION_BASE_URL}
   short_url_length: ${SHORT_URL_LENGTH}
@@ -25,3 +35,17 @@ app:
   short_url_key_lower: ${SHORT_URL_LOWER_KEY}
   short_url_key_num: ${SHORT_URL_NUMBER_KEY}
   short_url_key_sec: ${SHORT_URL_SPECIAL_KEY}
+
+# Springdoc OpenAPI & Swagger UI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+    try-it-out-enabled: true
+    filter: true
