@@ -8,9 +8,12 @@ import com.zerotoismail.shorturlservice.repo.ShortUrlRepository;
 import com.zerotoismail.shorturlservice.service.ShortURLService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Random;
 
 /**
@@ -39,6 +42,9 @@ public class ShortURLServiceImpl implements ShortURLService {
     private final AppConfig appConfig;
     private final Random random = new SecureRandom();
     private final ShortUrlRepository repository;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
+    private static final String KEY_NAMESPACE = "ismail:";
 
     private String characterPool;
 
@@ -98,8 +104,17 @@ public class ShortURLServiceImpl implements ShortURLService {
      */
     @Override
     public String convertShortUrlToLong(String shortUrl) {
+
+        String result = stringRedisTemplate.opsForValue().get(KEY_NAMESPACE + shortUrl);
+
+        if(result != null) {
+            return result;
+        }
+
         UrlEntity urlEntity = repository.findByShortURL(shortUrl)
                 .orElseThrow(() -> new UrlNotFoundException("Not able to find URL for this: " + shortUrl));
+
+        stringRedisTemplate.opsForValue().set(KEY_NAMESPACE + shortUrl, urlEntity.getLongURL(), Duration.ofMinutes(1));
         return urlEntity.getLongURL();
     }
 }
